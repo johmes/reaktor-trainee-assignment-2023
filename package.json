@@ -1,0 +1,16 @@
+{
+  "name": "reaktor-assignment-birdnest",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Root package.json",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "author": "Johannes Mensalo",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
