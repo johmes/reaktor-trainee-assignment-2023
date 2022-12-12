@@ -4,13 +4,20 @@
   "type": "module",
   "description": "Root package.json",
   "scripts": {
-    "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "postinstall": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+    "start": "yarn --cwd frontend build && node backend/server.js",
+    "server": "yarn --cwd frontend build && nodemon --ext * backend/server.js"
   },
   "author": "Johannes Mensalo",
   "license": "ISC",
   "devDependencies": {
+    "connect-livereload": "^0.6.1",
+    "livereload": "^0.9.3",
     "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express-async-handler": "^1.2.0",
+    "fast-xml-parser": "^4.0.12",
+    "mongoose": "^6.8.0"
   }
 }
