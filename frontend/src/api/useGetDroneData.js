@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
+// TODO - delete this file
 const useGetDroneData = () => {
   const [droneData, setDroneData] = useState(null);
 

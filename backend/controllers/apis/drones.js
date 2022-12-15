@@ -12,7 +12,7 @@ const droneData = async () => {
       return obj.report.capture
     })
 }
-
+// TODO - delete this
 // @desc Get drone data
 // @route GET /api/drones
 const getDrones = asyncHandler(async (_, res, next) => {

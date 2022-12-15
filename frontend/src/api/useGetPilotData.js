@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+// TODO - delete this file
 const useGetPilotData = (serialNumber) => {
   const [pilotData, setPilotData] = useState({});
 
