@@ -29,5 +29,5 @@ const ViolationSchema = new mongoose.Schema(
     timestamps: true
   }
 )
-
-module.exports = mongoose.model('Violation', ViolationSchema)
+// Set TTL index to expire entries after 1 hour
+module.exports = mongoose.model('Violation', ViolationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 3600 }))
