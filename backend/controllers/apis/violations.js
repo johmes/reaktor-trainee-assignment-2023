@@ -1,19 +1,17 @@
 const asyncHandler = require('express-async-handler')
+const { checkIfInNDZ } = require('../../functions/createViolation')
 const Violation = require('../../models/Violation')
 const { droneData } = require('./drones')
 const { findPilot } = require('./pilots')
 
 const constructViolation = async (drone) => {
+  const getDroneDistParams = checkIfInNDZ(drone.positionX, drone.positionY)
+  const { closestDistance, isViolating } = getDroneDistParams
+  const timestamp = Date.now()
   const pilot = await findPilot(drone.serialNumber)
     .then(pilot => { return pilot.data })
     .catch(error => { throw new Error(error) })
   const { pilotName, pilotPhoneNumber, pilotEmail } = pilot
-
-  const getDroneDistParams = checkIfinNDZ(drone.positionX, drone.positionY)
-  const closestDistance = getDroneDistParams.closestDistance
-  const isViolating = getDroneDistParams.isViolating
-  const timestamp = Date.now()
-
 
   return {
     data: {
@@ -28,7 +26,6 @@ const constructViolation = async (drone) => {
 }
 
 const findViolations = async () => {
-  // Checks if timestamp is less that what is ten minutes ago
   const currentTime = Date.now()
   const violations = await Violation
     .find()
@@ -54,31 +51,33 @@ const createViolation = async (data) => {
 // @desc Get violations newer than 10 minutes and response with json
 // @route GET /api/violations
 const getViolations = asyncHandler(async (req, res) => {
-  const violations = findViolations()
+  const violations = await findViolations()
   res.status(200).json(violations)
 })
 
 
-const getViolationSocketData = (callback) => {
-  const obj = findViolations()
+const getViolationSocketData = async (callback) => {
+  const obj = await findViolations()
   if (callback != undefined) {
     callback(obj)
   }
 }
 
+
 const putViolationsTodb = async () => {
-  const drones = droneData().then(drones => { return drones })
+  const drones = await droneData().then(drones => { return drones })
   const violationsList = []
   // TODO: TypeError: drones.forEach is not a function
   drones.forEach(async drone => {
     const newViolationObject = await constructViolation(drone)
-
     if (newViolationObject.isViolating) {
       const violation = await createViolation(newViolationObject.data)
       violationsList.push(violation)
     }
   })
+  return violationsList
 }
+
 
 // @desc Set violations to MongoDB
 // @route POST /api/violations
@@ -93,6 +92,7 @@ const setViolations = async (req, res) => {
   }
 
 }
+
 
 module.exports = {
   getViolations,

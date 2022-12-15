@@ -1,11 +1,9 @@
 import React from 'react'
 import styles from "../styles/Home.module.css"
 import Card from "./Card";
-// import useGetViolationData from "../api/useGetViolationData";
+
 
 const Home = (props) => {
-  // const violations = useGetViolationData()
-
   return (
     <div className={styles.container}>
       <header>
@@ -16,20 +14,23 @@ const Home = (props) => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Reaktor Trainee Assignment 2023
+          Birdnest is under attack!
         </h1>
 
-        <h2>Latest observations near birdnest</h2>
+        <h2>Here are the pilots disturbing the peace of the nest</h2>
 
         <div className={styles.grid}>
           {(props.violations && props.violations.length > 0)
             &&
             props.violations.map((violation, index) => (
-              <div key={index}><Card item={violation} /></div>
+              <div key={index}>
+                <Card item={violation} />
+              </div>
             ))
           }
         </div>
       </main>
+      
       <footer className={styles.footer}>
         <p>Developed by Johannes Mensalo &copy; 2022</p>
       </footer>

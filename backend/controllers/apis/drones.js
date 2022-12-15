@@ -4,18 +4,24 @@ const { xmlparser } = require('../../config/xmlparser');
 
 const dronesUrl = "https://assignments.reaktor.com/birdnest/drones";
 
-const droneData = async () =>
-  await axios.get(dronesUrl).then(result => {
-    let obj = xmlparser(result.data)
-    return obj
-  }).catch(error => {
-    throw new Error(error)
-  })
+const droneData = async () => {
+  return await axios
+    .get(dronesUrl)
+    .then(drones => {
+      let obj = xmlparser(drones.data)
+      return obj
+    })
+}
+
 
 // @desc Get drone data
 // @route GET /api/drones
-const getDrones = asyncHandler(async (req, res, next) => {
-  return res.status(200).json(drones())
+const getDrones = asyncHandler(async (_, res, next) => {
+  await droneData().then(drones => {
+    res.status(200).json(drones.data)
+  }).catch(error => {
+    next(error)
+  })
 })
 
 module.exports = { getDrones, droneData }

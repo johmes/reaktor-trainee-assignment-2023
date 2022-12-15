@@ -4,7 +4,7 @@ const path = require('path')
 const _ = require('underscore')
 const bodyParser = require('body-parser')
 const apiRouter = require('./apis')
-const { getViolationSocketData, setViolations, putViolationsTodb } = require('../controllers/apis/violations')
+const { getViolationSocketData, putViolationsTodb } = require('../controllers/apis/violations')
 const frontendPath = path.join(__dirname, "../../", "frontend/build")
 
 const init = (app, server) => {

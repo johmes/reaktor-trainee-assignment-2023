@@ -1,26 +1,21 @@
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import getMinutesAgo from '../functions/getMinutesAgo'
 import styles from "../styles/Home.module.css"
 
 const Card = (props) => {
   const { item } = props
   const [timeAgo, setTimeAgo] = useState()
 
+  // TODO: clean useEffect 
   useEffect(() => {
     const interval = setInterval(() => {
-      const currentTime = Date.now()
-      const seconds = Math.floor((currentTime - item.timestamp) / 1000)
-      const interval = Math.floor(((seconds / 60) / 60) * 60)
-  
-      if (interval > 1) {
-        setTimeAgo(`${interval} minutes ago`)
-      } else {
-        setTimeAgo("Now")
-      }
+      setTimeAgo(getMinutesAgo(item.timestamp))
     }, 2000)
     return () => clearInterval(interval)
   }, [setTimeAgo, timeAgo, item.timestamp])
+
 
   return (
     <div className={styles.card}>

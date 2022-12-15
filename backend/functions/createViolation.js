@@ -1,14 +1,13 @@
 const { calculateDist } = require("./calculatedist");
 
-const checkIfinNDZ = (posX, posY) => {
-  // origin of nest
+const checkIfInNDZ = (posX, posY) => {
   const nestCoords = { x: 250000, y: 250000 }
-  const distObj = calculateDist(nestCoords, { x: posX, y: posY })
-  const isInNDZ = distObj.ndz;
+  const droneCoords = { x: posX, y: posY }
+  const distObj = calculateDist(nestCoords, droneCoords)
   return {
-    inNDZ: isInNDZ,
+    inNDZ: distObj.ndz,
     distance: distObj.distance
   };
 }
 
-module.exports = { checkIfinNDZ };
+module.exports = { checkIfInNDZ };

@@ -10,15 +10,13 @@ const App = () => {
     console.log(socket.id);
     socket.emit("ready");
   });
-  
+
   socket.on("violationData", (data) => {
     console.log("Recieved ", data.data);
     setData(data);
   });
-  
-  return (
-    <Home violations={data} />
-  );
+
+  return (<Home violations={data} />);
 }
 
 export default App;
