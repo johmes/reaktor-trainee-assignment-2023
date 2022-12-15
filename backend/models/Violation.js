@@ -14,7 +14,6 @@ const ViolationSchema = new mongoose.Schema(
     },
     pilotEmail: {
       type: String,
-      unique: true,
       required: true,
     },
     closestDistance: {

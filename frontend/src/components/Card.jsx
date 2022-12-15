@@ -8,16 +8,25 @@ const Card = (props) => {
   const [timeAgo, setTimeAgo] = useState()
 
   useEffect(() => {
-    const seconds = Math.floor((new Date() - new Date(item.timestamp * 1000)) / 1000)
-    const interval = Math.floor(((seconds / 60) / 60) * 60)
-    setTimeAgo(interval)
-  }, [setTimeAgo, item.timestamp])
+    const interval = setInterval(() => {
+      const currentTime = Date.now()
+      const seconds = Math.floor((currentTime - item.timestamp) / 1000)
+      const interval = Math.floor(((seconds / 60) / 60) * 60)
+  
+      if (interval > 1) {
+        setTimeAgo(`${interval} minutes ago`)
+      } else {
+        setTimeAgo("Now")
+      }
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [setTimeAgo, timeAgo, item.timestamp])
 
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <h2>{item.pilotName}</h2>
-        <p className={styles.secondaryText}>{timeAgo} min ago</p>
+        <p className={styles.secondaryText}>{timeAgo}</p>
       </div>
       <p>Phone number: {item.pilotPhoneNumber}</p>
       <p>Email address: {item.pilotEmail}</p>

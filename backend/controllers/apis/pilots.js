@@ -3,14 +3,17 @@ const axios = require('axios');
 
 const pilotsUrl = "https://assignments.reaktor.com/birdnest/pilots/";
 
+const findPilot = async (serialNumber) => await axios
+  .get(`${pilotsUrl}${serialNumber}`)
+  .then(result => { return result.data })
+
 // @desc Get pilot data
 // @route GET /api/pilots/:serialNumber
 const getPilots = asyncHandler(async (req, res, next) => {
-  await axios.get(`${pilotsUrl}${req.params.serialNumber}`).then(result => {
-    return res.status(200).json(result.data)
-  }).catch(error => {
-    next(error)
-  })
+  await findPilot(req.params.serialNumber)
+    .catch(error => {
+      next(error)
+    })
 })
 
-module.exports = { getPilots }
+module.exports = { getPilots, findPilot }

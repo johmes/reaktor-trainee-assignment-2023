@@ -1,38 +1,23 @@
-import styles from "./styles/Home.module.css"
-import Card from "./components/Card";
-import useGetViolationData from "./api/useGetViolationData";
+import Home from "./components/Home.jsx";
+import { io } from "socket.io-client";
+import { useState } from "react";
 
 const App = () => {
-  const violations = useGetViolationData()
+  const [data, setData] = useState([])
+  const socket = io();
 
+  socket.on("connect", () => {
+    console.log(socket.id);
+    socket.emit("ready");
+  });
+  
+  socket.on("violationData", (data) => {
+    console.log("Recieved ", data.data);
+    setData(data);
+  });
+  
   return (
-    <div className={styles.container}>
-      <header>
-        <title>Project Birdnest</title>
-        <meta name="description" content="React web app made for Reaktor Trainee Assignment." />
-        <link rel="icon" href="/favicon.ico" />
-      </header>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Reaktor Trainee Assignment 2023
-        </h1>
-
-        <h2>Latest observations near birdnest</h2>
-
-        <div className={styles.grid}>
-          {(violations && violations.length > 0)
-            &&
-            violations.map((violation, index) => (
-              <div key={index}><Card item={violation} /></div>
-            ))
-          }
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <p>Developed by Johannes Mensalo &copy; 2022</p>
-      </footer>
-    </div>
+    <Home violations={data} />
   );
 }
 
