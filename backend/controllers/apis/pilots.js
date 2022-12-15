@@ -9,7 +9,6 @@ const findPilot = async (serialNumber) => {
     .then(result => { return result.data })
 }
 
-
 // @desc Get pilot data
 // @route GET /api/pilots/:serialNumber
 const getPilot = asyncHandler(async (req, res, next) => {

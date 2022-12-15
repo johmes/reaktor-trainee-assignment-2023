@@ -9,10 +9,9 @@ const droneData = async () => {
     .get(dronesUrl)
     .then(drones => {
       let obj = xmlparser(drones.data)
-      return obj
+      return obj.report.capture
     })
 }
-
 
 // @desc Get drone data
 // @route GET /api/drones

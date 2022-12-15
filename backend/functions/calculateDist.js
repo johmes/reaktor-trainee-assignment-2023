@@ -1,11 +1,12 @@
 const calculateDist = (nestCoords, droneCoords) => {
-  // 100 meter radius * 1000. 1000 units = 1 meter
-  const NDZRadius = 100 * 1000;
+  // 100 meter radius
+  const NDZRadius = 100;
   const a = nestCoords.x - droneCoords.x;
   const b = nestCoords.y - droneCoords.y;
+  const hypot = Math.ceil(Math.hypot(a, b) / 1000)
   return {
-    ndz: Math.hypot(a, b) < NDZRadius,
-    distance: Math.hypot(a, b)
+    ndz: hypot <= NDZRadius,
+    distance: hypot.toFixed(0)
   };
 }
 

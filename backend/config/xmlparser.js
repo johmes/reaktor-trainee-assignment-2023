@@ -7,7 +7,6 @@ const xmlparser = (xml) => {
   }
   const parser = new XMLParser(options);
   const jsObj = parser.parse(xml);
-
   return jsObj;
 }
 
