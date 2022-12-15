@@ -5,7 +5,8 @@
   "description": "Root package.json",
   "scripts": {
     "start": "yarn --cwd frontend build && node backend/server.js",
-    "server": "yarn --cwd frontend build && nodemon --ext * backend/server.js"
+    "server": "yarn --cwd frontend build && nodemon --ext * backend/server.js",
+    "postinstall": "yarn --cwd frontend && yarn --cwd backend"
   },
   "author": "Johannes Mensalo",
   "license": "ISC",
