@@ -18,7 +18,7 @@ const droneData = async () => {
 // @route GET /api/drones
 const getDrones = asyncHandler(async (_, res, next) => {
   await droneData().then(drones => {
-    res.status(200).json(drones.data)
+    res.status(200).json(drones)
   }).catch(error => {
     next(error)
   })

@@ -4,22 +4,22 @@ const Violation = require('../../models/Violation')
 const { droneData } = require('./drones')
 const { findPilot } = require('./pilots')
 
-const constructViolation = async (drone) => {
+const constructViolation = async (drone, timestamp) => {
   const getDroneDistParams = checkIfInNDZ(drone.positionX, drone.positionY)
   const { closestDistance, isViolating } = getDroneDistParams
-  const timestamp = Date.now()
+  const timestampInMillis = new Date(timestamp).getUTCMilliseconds
   const pilot = await findPilot(drone.serialNumber)
-    .then(pilot => { return pilot.data })
+    .then(pilot => { return pilot })
     .catch(error => { throw new Error(error) })
-  const { pilotName, pilotPhoneNumber, pilotEmail } = pilot
+  const { firstName, lastName, phoneNumber, email } = pilot
 
   return {
     data: {
-      pilotName,
-      pilotPhoneNumber,
-      pilotEmail,
+      pilotName: `${firstName} ${lastName}`,
+      pilotPhoneNumber: phoneNumber,
+      pilotEmail: email,
       closestDistance,
-      timestamp,
+      timestampInMillis,
     },
     isViolating: isViolating
   }
@@ -28,9 +28,8 @@ const constructViolation = async (drone) => {
 const findViolations = async () => {
   const currentTime = Date.now()
   const violations = await Violation
-    .find()
+    .find({}, { _id: 0 })
     .where('timestamp')
-    .gte(currentTime - 600000)
     .sort({ timestamp: -1 })
   return violations
 }
@@ -57,19 +56,22 @@ const getViolations = asyncHandler(async (req, res) => {
 
 
 const getViolationSocketData = async (callback) => {
-  const obj = await findViolations()
+  const list = await findViolations()
   if (callback != undefined) {
-    callback(obj)
+    callback(list)
   }
 }
 
 
 const putViolationsTodb = async () => {
-  const drones = await droneData().then(drones => { return drones })
+  // Drone data is in drones.capture.drone
+  const capture = await droneData().then(drones => { return drones.report.capture })
+  const drones = capture.drone
+  const snapshotTimestamp = capture['@_snapshotTimestamp']
   const violationsList = []
   // TODO: TypeError: drones.forEach is not a function
   drones.forEach(async drone => {
-    const newViolationObject = await constructViolation(drone)
+    const newViolationObject = await constructViolation(drone, snapshotTimestamp)
     if (newViolationObject.isViolating) {
       const violation = await createViolation(newViolationObject.data)
       violationsList.push(violation)

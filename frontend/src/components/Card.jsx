@@ -8,14 +8,12 @@ const Card = (props) => {
   const { item } = props
   const [timeAgo, setTimeAgo] = useState()
 
-  // TODO: clean useEffect 
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeAgo(getMinutesAgo(item.timestamp))
     }, 2000)
     return () => clearInterval(interval)
-  }, [setTimeAgo, timeAgo, item.timestamp])
-
+  }, [item.timestamp, setTimeAgo])
 
   return (
     <div className={styles.card}>
