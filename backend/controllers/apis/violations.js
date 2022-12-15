@@ -33,7 +33,7 @@ const findViolations = async () => {
   const violations = await Violation
     .find({}, { _id: 0 })
     .where('timestamp')
-    .gt(currentTime - 660000)
+    .gte(currentTime - 660000)
     .sort({ timestamp: -1 })
   return violations
 }
@@ -42,16 +42,15 @@ const fetchToDB = async violations => {
   Promise.all(violations).then(async result => {
     result.forEach(async violation => {
       if (violation.inNDZ) {
-        console.log(`Violation found: ${violation.data.pilotName} ${violation.data.closestDistance} m`)
+        console.log(`Violation detected: ${violation.data.pilotName} ${violation.data.closestDistance} m`)
         Violation.findOne(
           { 'pilotName': violation.data.pilotName },
           { 'sort': { timestamp: -1 } },
-          { 'projection': { '_id': 1, 'closestDistance': 1, 'timestamp': 1 } },
+          { 'projection': { '_id': 1, 'closestDistance': 1, 'timestamp': 1, 'pilotName': 1 } },
           (err, doc) => handleUpdate(err, doc, violation.data)
         )
       }
     })
-
   })
 }
 
@@ -59,7 +58,7 @@ const handleUpdate = (err, doc, data) => {
   if (doc) {
     const latestDistance = doc.closestDistance
     if (latestDistance > data.closestDistance) {
-      console.log("Updated ", doc.id)
+      console.log("Updated ", doc.pilotName + " from " + latestDistance + " m" + " to " + data.closestDistance + " m")
       Violation.findOneAndUpdate(
         { pilotEmail: data.pilotEmail },
         { closestDistance: data.closestDistance, timestamp: data.timestamp },
@@ -118,7 +117,6 @@ const createViolations = (capture) => {
   })
   return fetchToDB(violationList)
 }
-
 
 // @desc Set violations to MongoDB
 // @route POST /api/violations

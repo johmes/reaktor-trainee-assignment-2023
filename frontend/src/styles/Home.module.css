@@ -9,6 +9,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 }
 
 .footer {
@@ -42,6 +43,7 @@
   margin: 0;
   line-height: 1.15;
   font-size: 4rem;
+  color: #000;
 }
 
 .title,
@@ -53,6 +55,7 @@
   margin: 4rem 0;
   line-height: 1.5;
   font-size: 1.5rem;
+  color: #fff;
 }
 
 .grid {
@@ -84,10 +87,7 @@
 .card:hover,
 .card:focus,
 .card:active {
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0px 2px 8px 4px #2e2e2e;
-  }
-  box-shadow: 0px 2px 8px 4px #c7c7c7;
+  box-shadow: 0px 2px 8px 4px #2e2e2e;
   transform: scale(1.01);
 }
 
@@ -114,15 +114,11 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .card,
-  .footer {
-    border-color: #222;
-  }
-  .code {
-    background: #111;
-  }
-  .logo img {
-    filter: invert(1);
-  }
+.card,
+.footer {
+  border-color: #222;
+  background-color: #2e2e2e;
+}
+.logo img {
+  filter: invert(1);
 }

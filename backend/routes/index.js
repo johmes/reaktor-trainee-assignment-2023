@@ -14,7 +14,11 @@ const init = (app) => {
   app.use('/', express.static(frontendPath))
   app.use('/api', apiRouter)
 
+  let lastUsed = Date.now()
   const clients = {}
+
+  console.log("Starting interval")
+  console.log("Total clients: " + _.size(clients))
 
   io.sockets.on('connection', socket => {
     clients[socket.id] = true
@@ -22,39 +26,38 @@ const init = (app) => {
 
     socket.on('ready', async () => {
       const capture = await droneData()
-      .then(capture => {
-        return capture
-      }) // Drone data is in drones.capture.drone
+        .then(capture => { return capture }) // Drone data is in drones.capture.drone
       await createViolations(capture)
         .then(async () => {
           await getViolationSocketData(data => {
             socket.volatile.emit('violationData', data)
           })
         })
-        .catch((error) => {
-          throw new Error(error)
-        })
-      socket.on('disconnect', () => delete clients[socket.id])
-    })
+        .catch((error) => { throw new Error(error) })
 
+      socket.on('disconnect', () => {
+        delete clients[socket.id]
+        console.log(`Client ${socket.id} disconnected, total clients: ${_.size(clients)}`)
+        lastUsed = Date.now()
+      })
+    })
   })
 
   setInterval(async () => {
-    if (_.size(clients) == 0) { return; }
-    // drones from API
+    // timeout after 10 minutes to save resources
+    if (_.size(clients) === 0 && Date.now() - lastUsed > 600000) { return; }
     const capture = await droneData()
-      .then(capture => {
-        return capture
-      }) // Drone data is in drones.capture.drone
+      .then(capture => { return capture }) // Drone data is in drones.capture.drone
+
     await createViolations(capture)
       .then(async () => {
-        await getViolationSocketData((data) => {
-          io.sockets.emit('violationData', data)
-        })
+        if (_.size(clients) > 0) {
+          await getViolationSocketData((data) => {
+            io.sockets.emit('violationData', data)
+          })
+        }
       })
-      .catch((error) => {
-        throw new Error(error)
-      })
+      .catch((error) => { throw new Error(error) })
   }, 2000)
 }
 
