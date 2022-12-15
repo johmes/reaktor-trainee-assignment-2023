@@ -14,7 +14,7 @@ const constructViolation = async (drone, timestamp) => {
   const pilot = await findPilot(serialNumber)
     .then(pilot => { return pilot })
     .catch(error => { throw new Error(error) })
-  const { firstName = '', lastName = '', phoneNumber = '', email = '' } = pilot
+  const { firstName, lastName, phoneNumber, email } = pilot
 
   return {
     data: {
@@ -33,13 +33,42 @@ const findViolations = async () => {
   const violations = await Violation
     .find({}, { _id: 0 })
     .where('timestamp')
-    .gte(currentTime - 600000)
+    .gt(currentTime - 660000)
     .sort({ timestamp: -1 })
   return violations
 }
 
 const fetchToDB = async violations => {
-  return await Violation.insertMany(violations)
+  Promise.all(violations).then(async result => {
+    result.forEach(async violation => {
+      if (violation.inNDZ) {
+        console.log(`Violation found: ${violation.data.pilotName} ${violation.data.closestDistance} m`)
+        Violation.findOne(
+          { 'pilotName': violation.data.pilotName },
+          { 'sort': { timestamp: -1 } },
+          { 'projection': { '_id': 1, 'closestDistance': 1, 'timestamp': 1 } },
+          (err, doc) => handleUpdate(err, doc, violation.data)
+        )
+      }
+    })
+
+  })
+}
+
+const handleUpdate = (err, doc, data) => {
+  if (doc) {
+    const latestDistance = doc.closestDistance
+    if (latestDistance > data.closestDistance) {
+      console.log("Updated ", doc.id)
+      Violation.findOneAndUpdate(
+        { pilotEmail: data.pilotEmail },
+        { closestDistance: data.closestDistance, timestamp: data.timestamp },
+        (err) => { if (err) { throw new Error(err) } })
+    }
+  } else {
+    Violation.create(data)
+  }
+  if (err) { throw new Error(err) }
 }
 
 // @desc Get violations newer than 10 minutes and response with json
@@ -61,8 +90,9 @@ const createViolations = (capture) => {
   // Check if drone is violating NDZ and add to violationsList
   //Create violation object with constructViolation function
   let violationList = new Array()
-  capture.drone.forEach(drone => {
-    constructViolation(drone, capture['@_snapshotTimestamp'])
+
+  const doSomeThing = async (drone) => {
+    return constructViolation(drone, capture['@_snapshotTimestamp'])
       .then(violationObject => {
         const data = violationObject.data
 
@@ -73,12 +103,19 @@ const createViolations = (capture) => {
           closestDistance: data.closestDistance,
           timestamp: data.timestamp,
         })
-        // if (newViolationObject.inNDZ) {
-        // }
-        return violation
+        return {
+          data: violation,
+          inNDZ: violationObject.inNDZ
+        }
       })
+  }
+  capture.drone.forEach(drone => {
+    const violation = doSomeThing(drone)
+      .then(result => {
+        return result
+      })
+    violationList.push(violation)
   })
-  console.log("List of violations", violationList)
   return fetchToDB(violationList)
 }
 

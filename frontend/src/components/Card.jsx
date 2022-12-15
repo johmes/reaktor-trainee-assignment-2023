@@ -9,6 +9,7 @@ const Card = (props) => {
   const [timeAgo, setTimeAgo] = useState()
 
   useEffect(() => {
+    setTimeAgo(getMinutesAgo(item.timestamp))
     const interval = setInterval(() => {
       setTimeAgo(getMinutesAgo(item.timestamp))
     }, 2000)

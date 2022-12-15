@@ -12,7 +12,6 @@ const App = () => {
       socket.emit("ready");
 
       socket.on("violationData", (data) => {
-        console.log("Recieved ", data);
         setData(data);
       });
     });

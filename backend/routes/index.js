@@ -26,8 +26,7 @@ const init = (app) => {
         return capture
       }) // Drone data is in drones.capture.drone
       await createViolations(capture)
-        .then(async (addedData) => {
-          console.log("Data size to db: ", addedData.length)
+        .then(async () => {
           await getViolationSocketData(data => {
             socket.volatile.emit('violationData', data)
           })
@@ -48,8 +47,7 @@ const init = (app) => {
         return capture
       }) // Drone data is in drones.capture.drone
     await createViolations(capture)
-      .then(async (addedData) => {
-        console.log("Data size to db: ", addedData.length)
+      .then(async () => {
         await getViolationSocketData((data) => {
           io.sockets.emit('violationData', data)
         })
