@@ -1,10 +1,10 @@
-const { getDrones } = require("./drones")
-const { getViolations, setViolations } = require("./violations")
-const { getPilot } = require("./pilots")
+const { droneData } = require("./drones")
+const { getViolationSocketData, createViolations } = require("./violations")
+const { findPilot } = require("./pilots")
 
 module.exports = {
-  getDrones,
-  getPilot,
-  getViolations,
-  setViolations
+  findPilot,
+  droneData,
+  getViolationSocketData,
+  createViolations
 }

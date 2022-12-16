@@ -1,7 +1,5 @@
-const asyncHandler = require('express-async-handler')
 const { checkIfInNDZ } = require('../../functions/checkIfInNDZ')
 const Violation = require('../../models/Violation')
-const { droneData } = require('./drones')
 const { findPilot } = require('./pilots')
 
 const constructViolation = async (drone, timestamp) => {
@@ -70,13 +68,6 @@ const handleUpdate = (err, doc, data) => {
   if (err) { throw new Error(err) }
 }
 
-// @desc Get violations newer than 10 minutes and response with json
-// @route GET /api/violations
-const getViolations = asyncHandler(async (_, res) => {
-  const violations = await findViolations()
-  res.status(200).json(violations)
-})
-
 const getViolationSocketData = async callback => {
   const violationList = await findViolations()
   if (callback != undefined) {
@@ -86,8 +77,12 @@ const getViolationSocketData = async callback => {
 
 // @desc Create violations from data of drones and fetch to MongoDB
 const createViolations = (capture) => {
-  // Check if drone is violating NDZ and add to violationsList
-  //Create violation object with constructViolation function
+  /** 
+   * Check if drone is violating NDZ and 
+   * add to violationsList 
+   * Create violation object with constructViolation 
+   * function
+   * */
   let violationList = new Array()
 
   const doSomeThing = async (drone) => {
@@ -118,27 +113,7 @@ const createViolations = (capture) => {
   return fetchToDB(violationList)
 }
 
-// @desc Set violations to MongoDB
-// @route POST /api/violations
-const setViolations = async (_, res) => {
-  try {
-    res.set('Content-Type', 'application/x-www-form-urlencoded')
-    // drones from API
-    const capture = await droneData()
-      .then(capture => {
-        return capture
-      }) // Drone data is in drones.capture.drone
-    const listOfViolations = createViolations(capture)
-    res.status(201).json(listOfViolations)
-  } catch (error) {
-    console.error(error)
-    res.status(400).json({ message: 'Invalid data' })
-  }
-}
-
 module.exports = {
-  getViolations,
-  setViolations,
   getViolationSocketData,
   createViolations
 }

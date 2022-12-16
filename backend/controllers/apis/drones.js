@@ -1,4 +1,3 @@
-const asyncHandler = require('express-async-handler')
 const axios = require('axios');
 const { xmlparser } = require('../../config/xmlparser');
 
@@ -12,15 +11,5 @@ const droneData = async () => {
       return obj.report.capture
     })
 }
-// TODO - delete this
-// @desc Get drone data
-// @route GET /api/drones
-const getDrones = asyncHandler(async (_, res, next) => {
-  await droneData().then(drones => {
-    res.status(200).json(drones)
-  }).catch(error => {
-    next(error)
-  })
-})
 
-module.exports = { getDrones, droneData }
+module.exports = { droneData }

@@ -2,17 +2,15 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
 const _ = require('underscore')
-const apiRouter = require('./apis')
 const frontendPath = path.join(__dirname, "../../", "frontend/build")
-const { getViolationSocketData, createViolations } = require('../controllers/apis/violations')
 const { io } = require('../config/server-init')
-const { droneData } = require('../controllers/apis/drones')
+const { droneData } = require('../controllers/apis')
+const { getViolationSocketData, createViolations } = require('../controllers/apis')
 
 const init = (app) => {
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use('/', express.static(frontendPath))
-  app.use('/api', apiRouter)
 
   let lastUsed = Date.now()
   const clients = {}
@@ -44,8 +42,15 @@ const init = (app) => {
   })
 
   setInterval(async () => {
-    // timeout after 10 minutes to save resources
-    if (_.size(clients) === 0 && Date.now() - lastUsed > 600000) { return; }
+    /** 
+     * To save my poor server from using 
+     * too much resources timeout 
+     * after 1 hour of inactivity. 
+     * If statement can be removed if we want 
+     * the server to function as described 
+     * in the assignment. 
+     * */
+    if (_.size(clients) === 0 && Date.now() - lastUsed > 3600000) { return; }
     const capture = await droneData()
       .then(capture => { return capture }) // Drone data is in drones.capture.drone
 

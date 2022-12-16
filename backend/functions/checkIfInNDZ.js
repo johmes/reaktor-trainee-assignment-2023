@@ -1,4 +1,4 @@
-const { calculateDist } = require("./calculatedist");
+const { calculateDist } = require("../functions/calculateDist");
 
 const checkIfInNDZ = (posX, posY) => {
   const nestCoords = { x: 250000, y: 250000 }
