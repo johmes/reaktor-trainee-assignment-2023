@@ -1,6 +1,10 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "engines": {
+    "node": "18.12.1",
+    "yarn": "1.22.19"
+  },
   "license": "ISC",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

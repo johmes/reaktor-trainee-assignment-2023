@@ -1,6 +1,10 @@
 {
   "name": "backend",
   "version": "0.1.0",
+  "engines": {
+    "node": "18.12.1",
+    "yarn": "1.22.19"
+  },
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
