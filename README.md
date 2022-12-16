@@ -3,5 +3,7 @@
 # get started
 run `yarn add` to install required dependencies
 
-run `yarn server` to start server
-It will build frontend and start backend server.js with nodemon.
+run `yarn start` 
+to build frontend and start backend server.js
+or `yarn server` 
+to run with nodemon.
