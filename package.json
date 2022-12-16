@@ -10,8 +10,7 @@
   "scripts": {
     "start": "yarn --cwd frontend build && node backend/server.js",
     "server": "yarn --cwd frontend build && nodemon --ext * backend/server.js",
-    "postinstall": "yarn run webpack",
-    "heroku-postbuild": "yarn add && cd ./frontend && yarn add && yarn build && cd ../backend && yarn add"
+    "postinstall": "yarn add && cd ./frontend && yarn add && yarn build && cd ../backend && yarn add"
   },
   "author": "Johannes Mensalo",
   "license": "ISC",
