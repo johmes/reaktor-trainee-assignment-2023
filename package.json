@@ -10,15 +10,12 @@
   "scripts": {
     "start": "yarn --cwd frontend build && node backend/server.js",
     "server": "yarn --cwd frontend build && nodemon --ext * backend/server.js",
-    "postinstall": "yarn --cwd frontend && yarn --cwd frontend build && yarn --cwd backend"
+    "postinstall": "yarn --cwd frontend build"
   },
   "author": "Johannes Mensalo",
   "license": "ISC",
   "devDependencies": {
-    "connect-livereload": "^0.6.1",
-    "livereload": "^0.9.3",
     "nodemon": "^2.0.20"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
