@@ -25,7 +25,7 @@ Before violations are sent to batabase the raw data of pilots and drones are get
 Then violation schema is created and checks with bacic geometry if drone has been too close to the nest. All violations are then pushed to a list as a promise and then asynchronous added to database.
 Client side listens for data and shows updates in real time in the list. There is no need for refreshing the page.
 ## What to improve
-* Now the app shows also progression of the distance and stops to the nearest reading by checking from db if the same pilot has flown near it and if the new reading is smaller and former and. By having another collection for only keeping count of every drones distances we could show just the nearest result at the list.
+* Now the app shows also progression of the distance and stops to the nearest reading by checking from db if the same pilot has flown near it and if the new reading is smaller than the former one. By having another collection for only keeping count of every drones distances we could show just the nearest result at the list.
 * Loading the list takes 1-2 seconds so it is not the fastest but it still loads it relatively fast.
 * I'll add more error handling especially for database connection.
 
