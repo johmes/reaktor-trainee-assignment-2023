@@ -85,7 +85,7 @@ const createViolations = (capture) => {
    * */
   let violationList = new Array()
 
-  const doSomeThing = async (drone) => {
+  const createViolation = async (drone) => {
     return constructViolation(drone, capture['@_snapshotTimestamp'])
       .then(violationObject => {
         const data = violationObject.data
@@ -103,13 +103,15 @@ const createViolations = (capture) => {
         }
       })
   }
+
   capture.drone.forEach(drone => {
-    const violation = doSomeThing(drone)
+    const violation = createViolation(drone)
       .then(result => {
         return result
       })
     violationList.push(violation)
   })
+
   return fetchToDB(violationList)
 }
 
