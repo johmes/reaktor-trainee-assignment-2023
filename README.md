@@ -11,8 +11,37 @@ Pre-assignment
 >Not require the user to manually refresh the view to see up-to-date information
 
 I made this app using NodeJs (Express), MongoDB as database and React for client side.
+It runs on Windows and should run on Linux and Mac OS without a too, but I haven't tested though.
 
 You can find the app hosted in https://reaktor-trainee-assignment.herokuapp.com/
+
+## Get started
+Download these packages with `yarn` in root and the postinstall script 
+will install all the necessary packages for /frontend and /backend
+
+## Packages to install
+Frontend
+- axios
+- react >= 18
+- react-dom >= 18
+- react-scripts
+- socket.io-client
+- web-vitals
+
+Backend
+- axios
+- errorhandler
+- express
+- body-parser
+- cors
+- dotenv
+- express-async-handler
+- fast-xml-parser
+- http
+- mongoose
+- socket.io
+- underscore
+
 
 ## Run locally
 To install required dependencies and start server run 
